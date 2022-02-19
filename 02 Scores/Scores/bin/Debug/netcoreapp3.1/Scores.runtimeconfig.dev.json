@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\Neptun\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\Neptun\\.nuget\\packages"
+    ]
+  }
+}

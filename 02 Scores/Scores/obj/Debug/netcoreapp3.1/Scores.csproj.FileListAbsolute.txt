@@ -1,0 +1,14 @@
+C:\Users\Neptun\Documents\Skillbox\C#\02 Scores\Scores\bin\Debug\netcoreapp3.1\Scores.exe
+C:\Users\Neptun\Documents\Skillbox\C#\02 Scores\Scores\bin\Debug\netcoreapp3.1\Scores.deps.json
+C:\Users\Neptun\Documents\Skillbox\C#\02 Scores\Scores\bin\Debug\netcoreapp3.1\Scores.runtimeconfig.json
+C:\Users\Neptun\Documents\Skillbox\C#\02 Scores\Scores\bin\Debug\netcoreapp3.1\Scores.runtimeconfig.dev.json
+C:\Users\Neptun\Documents\Skillbox\C#\02 Scores\Scores\bin\Debug\netcoreapp3.1\Scores.dll
+C:\Users\Neptun\Documents\Skillbox\C#\02 Scores\Scores\bin\Debug\netcoreapp3.1\Scores.pdb
+C:\Users\Neptun\Documents\Skillbox\C#\02 Scores\Scores\obj\Debug\netcoreapp3.1\Scores.csproj.AssemblyReference.cache
+C:\Users\Neptun\Documents\Skillbox\C#\02 Scores\Scores\obj\Debug\netcoreapp3.1\Scores.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Neptun\Documents\Skillbox\C#\02 Scores\Scores\obj\Debug\netcoreapp3.1\Scores.AssemblyInfoInputs.cache
+C:\Users\Neptun\Documents\Skillbox\C#\02 Scores\Scores\obj\Debug\netcoreapp3.1\Scores.AssemblyInfo.cs
+C:\Users\Neptun\Documents\Skillbox\C#\02 Scores\Scores\obj\Debug\netcoreapp3.1\Scores.csproj.CoreCompileInputs.cache
+C:\Users\Neptun\Documents\Skillbox\C#\02 Scores\Scores\obj\Debug\netcoreapp3.1\Scores.dll
+C:\Users\Neptun\Documents\Skillbox\C#\02 Scores\Scores\obj\Debug\netcoreapp3.1\Scores.pdb
+C:\Users\Neptun\Documents\Skillbox\C#\02 Scores\Scores\obj\Debug\netcoreapp3.1\Scores.genruntimeconfig.cache

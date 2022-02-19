@@ -1,0 +1,28 @@
+C:\Users\Neptun\Documents\Skillbox\C#\HelloWorld\HelloWorld\bin\Debug\netcoreapp3.1\HelloWorld.exe
+C:\Users\Neptun\Documents\Skillbox\C#\HelloWorld\HelloWorld\bin\Debug\netcoreapp3.1\HelloWorld.deps.json
+C:\Users\Neptun\Documents\Skillbox\C#\HelloWorld\HelloWorld\bin\Debug\netcoreapp3.1\HelloWorld.runtimeconfig.json
+C:\Users\Neptun\Documents\Skillbox\C#\HelloWorld\HelloWorld\bin\Debug\netcoreapp3.1\HelloWorld.runtimeconfig.dev.json
+C:\Users\Neptun\Documents\Skillbox\C#\HelloWorld\HelloWorld\bin\Debug\netcoreapp3.1\HelloWorld.dll
+C:\Users\Neptun\Documents\Skillbox\C#\HelloWorld\HelloWorld\bin\Debug\netcoreapp3.1\HelloWorld.pdb
+C:\Users\Neptun\Documents\Skillbox\C#\HelloWorld\HelloWorld\obj\Debug\netcoreapp3.1\HelloWorld.csproj.AssemblyReference.cache
+C:\Users\Neptun\Documents\Skillbox\C#\HelloWorld\HelloWorld\obj\Debug\netcoreapp3.1\HelloWorld.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Neptun\Documents\Skillbox\C#\HelloWorld\HelloWorld\obj\Debug\netcoreapp3.1\HelloWorld.AssemblyInfoInputs.cache
+C:\Users\Neptun\Documents\Skillbox\C#\HelloWorld\HelloWorld\obj\Debug\netcoreapp3.1\HelloWorld.AssemblyInfo.cs
+C:\Users\Neptun\Documents\Skillbox\C#\HelloWorld\HelloWorld\obj\Debug\netcoreapp3.1\HelloWorld.csproj.CoreCompileInputs.cache
+C:\Users\Neptun\Documents\Skillbox\C#\HelloWorld\HelloWorld\obj\Debug\netcoreapp3.1\HelloWorld.dll
+C:\Users\Neptun\Documents\Skillbox\C#\HelloWorld\HelloWorld\obj\Debug\netcoreapp3.1\HelloWorld.pdb
+C:\Users\Neptun\Documents\Skillbox\C#\HelloWorld\HelloWorld\obj\Debug\netcoreapp3.1\HelloWorld.genruntimeconfig.cache
+C:\Users\Neptun\Documents\Skillbox\C#\01 HelloWorld\HelloWorld\bin\Debug\netcoreapp3.1\HelloWorld.exe
+C:\Users\Neptun\Documents\Skillbox\C#\01 HelloWorld\HelloWorld\bin\Debug\netcoreapp3.1\HelloWorld.deps.json
+C:\Users\Neptun\Documents\Skillbox\C#\01 HelloWorld\HelloWorld\bin\Debug\netcoreapp3.1\HelloWorld.runtimeconfig.json
+C:\Users\Neptun\Documents\Skillbox\C#\01 HelloWorld\HelloWorld\bin\Debug\netcoreapp3.1\HelloWorld.runtimeconfig.dev.json
+C:\Users\Neptun\Documents\Skillbox\C#\01 HelloWorld\HelloWorld\bin\Debug\netcoreapp3.1\HelloWorld.dll
+C:\Users\Neptun\Documents\Skillbox\C#\01 HelloWorld\HelloWorld\bin\Debug\netcoreapp3.1\HelloWorld.pdb
+C:\Users\Neptun\Documents\Skillbox\C#\01 HelloWorld\HelloWorld\obj\Debug\netcoreapp3.1\HelloWorld.csproj.AssemblyReference.cache
+C:\Users\Neptun\Documents\Skillbox\C#\01 HelloWorld\HelloWorld\obj\Debug\netcoreapp3.1\HelloWorld.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Neptun\Documents\Skillbox\C#\01 HelloWorld\HelloWorld\obj\Debug\netcoreapp3.1\HelloWorld.AssemblyInfoInputs.cache
+C:\Users\Neptun\Documents\Skillbox\C#\01 HelloWorld\HelloWorld\obj\Debug\netcoreapp3.1\HelloWorld.AssemblyInfo.cs
+C:\Users\Neptun\Documents\Skillbox\C#\01 HelloWorld\HelloWorld\obj\Debug\netcoreapp3.1\HelloWorld.csproj.CoreCompileInputs.cache
+C:\Users\Neptun\Documents\Skillbox\C#\01 HelloWorld\HelloWorld\obj\Debug\netcoreapp3.1\HelloWorld.dll
+C:\Users\Neptun\Documents\Skillbox\C#\01 HelloWorld\HelloWorld\obj\Debug\netcoreapp3.1\HelloWorld.pdb
+C:\Users\Neptun\Documents\Skillbox\C#\01 HelloWorld\HelloWorld\obj\Debug\netcoreapp3.1\HelloWorld.genruntimeconfig.cache

@@ -2,7 +2,7 @@
 
 namespace Scores
 {
-    internal class Program2
+    internal class Program
     {
         static void Main(string[] args)
         {
@@ -16,12 +16,13 @@ namespace Scores
             string _wordProgramming = "Programming";
             string _wordMath = "Math";
             string _wordPhisics = "Phisics";
-            string _wordAverage = "Average"; 
+            string _wordAverage = "Average";
+            string _wordSum = "Sum";
 
             /*выводим шапку таблицы
              *после слова Phisic дополнительный пробел, чтобы уровнять таблицу после нажатия пробела перед выводом среднего значения
              */
-            string _template = $"{_fullName,30}|{_wordAge,5}|{_email,20}|{_wordProgramming,12}|{_wordMath,5}|{_wordPhisics,8} |{_wordAverage, 8}";
+            string _template = $"{_fullName,30}|{_wordAge,5}|{_email,20}|{_wordProgramming,12}|{_wordMath,5}|{_wordPhisics,8} |{_wordSum,7}|{_wordAverage,8}";
             Console.WriteLine(_template);
             Console.ReadKey();
             Console.WriteLine();/*дожидаемся нажатия кнопки и переносим строку*/
@@ -45,8 +46,8 @@ namespace Scores
             Console.Write(_template);
             Console.ReadKey();/*дожидаемся нажатия кнопки*/
 
-            /*выводим среднее*/
-            Console.Write($"|{ _scoresAverage, 7:0.00}"); /*здесь на ячейку 7 символов, а не 8, потому что 8й пробел ставит юзер, пытаясь открыть ячайку*/
+            /*выводим сумму и среднее*/
+            Console.Write($"|{ _scoresSum,7:0.00}|{ _scoresAverage,8:0.00}"); /*здесь на ячейку 7 символов, а не 8, потому что 8й пробел ставит юзер, пытаясь открыть ячайку*/
             Console.ReadKey();
             Console.WriteLine();/*дожидаемся нажатия кнопки и переносим строку*/
             #endregion
@@ -70,7 +71,7 @@ namespace Scores
             Console.ReadKey();/*дожидаемся нажатия кнопки*/
 
             /*выводим среднее*/
-            Console.Write($"|{ _scoresAverage,7:0.00}");
+            Console.Write($"|{ _scoresSum,7:0.00}|{ _scoresAverage,8:0.00}");
             Console.ReadKey();
             Console.WriteLine();/*дожидаемся нажатия кнопки и переносим строку*/
             #endregion
@@ -94,7 +95,7 @@ namespace Scores
             Console.ReadKey();/*дожидаемся нажатия кнопки*/
 
             /*выводим среднее*/
-            Console.Write($"|{ _scoresAverage,7:0.00}");
+            Console.Write($"|{ _scoresSum,7:0.00}|{ _scoresAverage,8:0.00}");
             Console.ReadKey();
             Console.WriteLine();/*дожидаемся нажатия кнопки и переносим строку*/
             #endregion
@@ -118,7 +119,7 @@ namespace Scores
             Console.ReadKey();/*дожидаемся нажатия кнопки*/
 
             /*выводим среднее*/
-            Console.Write($"|{ _scoresAverage,7:0.00}");
+            Console.Write($"|{ _scoresSum,7:0.00}|{ _scoresAverage,8:0.00}");
             Console.ReadKey();
             Console.WriteLine();/*дожидаемся нажатия кнопки и переносим строку*/
             #endregion

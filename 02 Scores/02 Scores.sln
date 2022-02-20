@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scores", "Scores\Scores.csproj", "{9E495170-C43A-4976-A5E1-05A76EACE587}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scores", "Scores\Scores.csproj", "{9E495170-C43A-4976-A5E1-05A76EACE587}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scores 2", "Scores 2\Scores 2.csproj", "{B08018BC-A8C7-4A2F-8D22-F117D3157B2D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{9E495170-C43A-4976-A5E1-05A76EACE587}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E495170-C43A-4976-A5E1-05A76EACE587}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E495170-C43A-4976-A5E1-05A76EACE587}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B08018BC-A8C7-4A2F-8D22-F117D3157B2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B08018BC-A8C7-4A2F-8D22-F117D3157B2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B08018BC-A8C7-4A2F-8D22-F117D3157B2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B08018BC-A8C7-4A2F-8D22-F117D3157B2D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

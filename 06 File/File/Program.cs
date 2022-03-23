@@ -18,24 +18,43 @@ namespace File
             sr.Close();
         }
 
+        static int getLastID(string filename)
+        {
+            int id = 0;
+            string readLine;
+            using (StreamReader sr = new StreamReader(filename))
+            {
+                while ((readLine = sr.ReadLine()) != null)
+                {
+                    string[] splittedLine = readLine.Split('#');
+                    id = Convert.ToInt32(splittedLine[0]);
+                }
+            }
+            return id;
+        }
+
         static void addLineToFile(string line, string fileName)
         {
+            int id = 0;
+            string date = DateTime.Now.ToString("dd.MM.yyyy HH:mm");
+
+            FileInfo f = new FileInfo(fileName);
+            if (f.Exists)
+                id = getLastID(fileName);
+            id++;
+
+            string writeLine = id.ToString() + "#" + date + "#" + line;
+
             using (StreamWriter sw = new StreamWriter(fileName, true))
             {
-                sw.WriteLine(line);
+                sw.WriteLine(writeLine);
             }
         }
 
         static string enterData()
         {
-            Console.WriteLine("enter ID");
-            StringBuilder line = new StringBuilder(Console.ReadLine());
-            line.Append('#');
-            Console.WriteLine("enter Date and Time when record wa added");
-            line.Append(Console.ReadLine());
-            line.Append('#');
             Console.WriteLine("enter Surname Name SecondName");
-            line.Append(Console.ReadLine());
+            StringBuilder line = new StringBuilder(Console.ReadLine());
             line.Append('#');
             Console.WriteLine("enter Age");
             line.Append(Console.ReadLine());
@@ -71,8 +90,6 @@ namespace File
                         FileInfo f = new FileInfo(filename);
                         if (f.Exists)
                             showFileData(filename);
-                        else 
-                            Console.WriteLine("File didn't exist, add data to create file");
                         break;
                     
                     case "2":

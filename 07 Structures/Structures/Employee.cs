@@ -31,6 +31,18 @@ namespace Structures
             this.birthCity = birthCity;
         }
 
+        public Employee(string line, char splitChar) : this()
+        {
+            string[] parts = line.Split(splitChar);
+            this.id = Convert.ToInt32(parts[0]);
+            this.date = Convert.ToDateTime(parts[1]);
+            this.name = parts[2];
+            this.age = Convert.ToInt32(parts[3]);
+            this.height = Convert.ToInt32(parts[4]);
+            this.birthDate = Convert.ToDateTime(parts[5]);
+            this.birthCity = parts[6];
+        }
+
         public int Id{ get; set; }
         public DateTime Date{ get; set; }  
         public string Name{ get; set; }
@@ -39,5 +51,25 @@ namespace Structures
         public DateTime BirthDate{ get; set; }
         public string BirthCity { get; set; }
 
+        public string ToString(char splitChar)
+        {
+
+            StringBuilder str = new StringBuilder();
+            str.Append(this.Id);
+            str.Append(splitChar);
+            str.Append(this.Date);
+            str.Append(splitChar);
+            str.Append(this.Name);
+            str.Append(splitChar);
+            str.Append(this.age);
+            str.Append(splitChar);
+            str.Append(this.height);
+            str.Append(splitChar);
+            str.Append(this.birthDate);
+            str.Append(splitChar);
+            str.Append(this.BirthCity);
+
+            return str.ToString();
+        }
     }
 }

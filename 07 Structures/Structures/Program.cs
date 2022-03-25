@@ -43,11 +43,12 @@ namespace Structures
         static void AddEmployeeToFile(Employee emp, string filename)
         {
             int id = 0;
-            string date = DateTime.Now.ToString("dd.MM.yyyy HH:mm");
 
             if (File.Exists(filename))
                 id = getLastID(filename);
             id++;
+
+            emp.SetID(id);
 
             using (StreamWriter sw = new StreamWriter(filename, true))
             {
@@ -64,25 +65,21 @@ namespace Structures
         {
             int listSize = GetSizeList(filename);
             Employee[] emps = new Employee[listSize];
-            bool flag = false;
-            int ind = 0;
+            int ind = -1;
 
             using (StreamReader sr = new StreamReader(filename))
             {
                 string line;
-
+                int i = 0;
                 while ((line = sr.ReadLine()) != null)
                 {
-                    emps[ind] = new Employee(line, '#');
-                    if (emps[ind].Id == id)
-                    {
-                        flag = true;
-                        break;
-                    }
-                    ind++;
+                    emps[i] = new Employee(line, '#');
+                    if (emps[i].GetID() == id)
+                        ind = i;
+                    i++;
                 }
             }
-            if (flag)
+            if (ind >= 0)
             {
                 using (StreamWriter sw = new StreamWriter(filename, false))
                 {
@@ -146,27 +143,27 @@ namespace Structures
                         return emp;
                     case "1":
                         Console.WriteLine("Enter Name");
-                        emp.Name = Console.ReadLine();
+                        emp.SetName(Console.ReadLine());
                         Console.WriteLine("Current Employee's data:\n" + emp.ToString(' '));
                         break;
                     case "2":
                         Console.WriteLine("Enter Age");
-                        emp.Age = Convert.ToInt32(Console.ReadLine());
+                        emp.SetAge(Convert.ToInt32(Console.ReadLine()));
                         Console.WriteLine("Current Employee's data:\n" + emp.ToString(' '));
                         break;
                     case "3":
                         Console.WriteLine("Enter Height");
-                        emp.Height = Convert.ToInt32(Console.ReadLine());
+                        emp.SetHeight(Convert.ToInt32(Console.ReadLine()));
                         Console.WriteLine("Current Employee's data:\n" + emp.ToString(' '));
                         break;
                     case "4":
                         Console.WriteLine("Enter Birth Date");
-                        emp.BirthDate = Convert.ToDateTime(Console.ReadLine());
+                        emp.SetBirthDate(Convert.ToDateTime(Console.ReadLine()));
                         Console.WriteLine("Current Employee's data:\n" + emp.ToString(' '));
                         break;
                     case "5":
                         Console.WriteLine("Enter Birth City");
-                        emp.BirthCity = Console.ReadLine();
+                        emp.SetBirthCity(Console.ReadLine());
                         Console.WriteLine("Current Employee's data:\n" + emp.ToString(' '));
                         break;
                     default: break;
@@ -201,9 +198,9 @@ namespace Structures
             }
             for(int i = 0; i < size; i++)
             {
-                if(employees[index].Id == emp.Id)
+                if(employees[i].GetID() == emp.GetID())
                 {
-                    employees[index] = emp;
+                    employees[i] = emp;
                     break;
                 }
             }
@@ -236,7 +233,7 @@ namespace Structures
                 while((line = sr.ReadLine()) != null)
                 {
                     Employee emp = new Employee(line, '#');
-                    if (emp.Date > from && emp.Date < to)
+                    if (emp.GetDate() > from && emp.GetDate() < to)
                     {
                         employees[count] = emp;
                         count++;
@@ -268,31 +265,38 @@ namespace Structures
                 while ((line = sr.ReadLine()) != null)
                 {
                     employees[index] = new Employee(line, '#');
+                    index++;
                 }
             }
 
-            DateTime tmpDate;
+            Employee tmp;
 
-            for (int i = 0; i < size; i++)
+            if (upper)
             {
-                for (int j = size - 1; j > i; j--)
+                for (int i = 0; i + 1 < size; i++)
                 {
-                    if (upper)
+                    for (int j = 0; j + 1 < size - i; j++)
                     {
-                        if (employees[j - 1].Date > employees[j].Date)
+                        if (employees[j + 1].GetDate() < employees[j].GetDate())
                         {
-                            tmpDate = employees[j - 1].Date;
-                            employees[j - 1].Date = employees[j].Date;
-                            employees[j].Date = tmpDate;
+                            tmp = employees[j + 1];
+                            employees[j + 1] = employees[j];
+                            employees[j] = tmp;
                         }
                     }
-                    else
+                }
+            }
+            else
+            {
+                for (int i = 0; i + 1 < size; i++)
+                {
+                    for (int j = 0; j + 1 < size - i; j++)
                     {
-                        if (employees[j - 1].Date < employees[j].Date)
+                        if (employees[j + 1].GetDate() > employees[j].GetDate())
                         {
-                            tmpDate = employees[j - 1].Date;
-                            employees[j - 1].Date = employees[j].Date;
-                            employees[j].Date = tmpDate;
+                            tmp = employees[j + 1];
+                            employees[j + 1] = employees[j];
+                            employees[j] = tmp;
                         }
                     }
                 }
@@ -350,13 +354,9 @@ namespace Structures
                         break;
 
                     case "3":
-                        int id = getLastID(filename);
-                        AddEmployeeToFile(                              //2) добавляем запись в файл
-                            new Employee(   id.ToString() +             //1) создаем сотрудника из строки с ID
-                                      "#" + DateTime.Now.ToString() +   //      со временем создания
-                                      "#" + enterData(), '#'),          //      и с данными из ввода
-                            filename);
-                        break ;
+                        string line = "0#" + DateTime.Now.ToString() + "#" + enterData();
+                        AddEmployeeToFile(new Employee(line, '#'), filename);
+                        break;
 
                     case "4":
                         Console.WriteLine("Enter ID");
@@ -366,7 +366,7 @@ namespace Structures
                                     Convert.ToInt32(        //2) конвертим в int
                                         Console.ReadLine()  //1) читаем ID записи
                                         ), filename)
-                                ), 
+                                ),
                             filename);
                         break;
 
@@ -382,32 +382,31 @@ namespace Structures
                         DateTime to = Convert.ToDateTime(Console.ReadLine());
 
                         Employee[] emps = GetEmployeesDateRange(from, to, filename);
-                        for(int i = 0; i < emps.Length; i++)
+                        for (int i = 0; i < emps.Length; i++)
                             Console.WriteLine(emps[i].ToString(' '));
                         break;
 
                     case "7":
-                        while (true)
+
+                        Console.WriteLine("Enter 1 to ascending sort\n" +
+                            "Enter 2 to descending sort\n" +
+                            "Enter 0 to exit sort menu");
+                        string sortChoice = Console.ReadLine();
+                        if (sortChoice == "0")
+                            break;
+                        switch (sortChoice)
                         {
-                            Console.WriteLine("Enter 1 to ascending sort\n" +
-                                "Enter 2 to descending sort" +
-                                "Enter 0 to exit sort menu");
-                            string sortChoice = Console.ReadLine();
-                            if (sortChoice == "0")
+                            case "1":
+                                SaveEmpoyeesListIntoFile(GetSortedEmployees(true, filename), filename);
                                 break;
-                            switch (sortChoice)
-                            {
-                                case "1":
-                                    SaveEmpoyeesListIntoFile(GetSortedEmployees(true, filename), filename);
-                                    break;
 
-                                case "2":
-                                    SaveEmpoyeesListIntoFile(GetSortedEmployees(false, filename), filename);
-                                    break;
+                            case "2":
+                                SaveEmpoyeesListIntoFile(GetSortedEmployees(false, filename), filename);
+                                break;
 
-                                default: break;
-                            }
+                            default: break;
                         }
+
                         break;
 
                     default: break;

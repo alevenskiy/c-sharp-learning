@@ -40,7 +40,7 @@ namespace Structures
         /// </summary>
         /// <param name="emp">Готовый сотрудник. ID и Дата перезапишутся</param>
         /// <param name="filename">Путь до файла и его имя</param>
-        static void AddEmployeeToFile(Employee emp, string filename)
+        static void AddLineToFile(string[] parts, string filename)
         {
             int id = 0;
 
@@ -48,11 +48,12 @@ namespace Structures
                 id = getLastID(filename);
             id++;
 
-            emp.SetID(id);
+            parts[0] = id.ToString();
+            parts[1] = DateTime.Now.ToString();
 
             using (StreamWriter sw = new StreamWriter(filename, true))
             {
-                sw.WriteLine(emp.ToString('#'));
+                sw.WriteLine(string.Join("#", parts));
             }
         }
 
@@ -63,7 +64,7 @@ namespace Structures
         /// <param name="filename">Путь до файла и его имя</param>
         static void DeleteEmployeeFromFile(int id, string filename)
         {
-            int listSize = GetSizeList(filename);
+            int listSize = File.ReadAllLines(filename).Length;
             Employee[] emps = new Employee[listSize];
             int ind = -1;
 
@@ -74,7 +75,7 @@ namespace Structures
                 while ((line = sr.ReadLine()) != null)
                 {
                     emps[i] = new Employee(line, '#');
-                    if (emps[i].GetID() == id)
+                    if (emps[i].Id == id)
                         ind = i;
                     i++;
                 }
@@ -113,7 +114,7 @@ namespace Structures
                     parts = line.Split('#');
                     if (id == Convert.ToInt32(parts[0]))
                     {
-                        return new Employee(line, '#');
+                        return new Employee(parts);
                     }
                 }
                 Console.WriteLine("There is no Employee with this id");
@@ -143,27 +144,27 @@ namespace Structures
                         return emp;
                     case "1":
                         Console.WriteLine("Enter Name");
-                        emp.SetName(Console.ReadLine());
+                        emp.Name = Console.ReadLine();
                         Console.WriteLine("Current Employee's data:\n" + emp.ToString(' '));
                         break;
                     case "2":
                         Console.WriteLine("Enter Age");
-                        emp.SetAge(Convert.ToInt32(Console.ReadLine()));
+                        emp.Age = Convert.ToInt32(Console.ReadLine());
                         Console.WriteLine("Current Employee's data:\n" + emp.ToString(' '));
                         break;
                     case "3":
                         Console.WriteLine("Enter Height");
-                        emp.SetHeight(Convert.ToInt32(Console.ReadLine()));
+                        emp.Height = Convert.ToInt32(Console.ReadLine());
                         Console.WriteLine("Current Employee's data:\n" + emp.ToString(' '));
                         break;
                     case "4":
                         Console.WriteLine("Enter Birth Date");
-                        emp.SetBirthDate(Convert.ToDateTime(Console.ReadLine()));
+                        emp.BirthDate = Convert.ToDateTime(Console.ReadLine());
                         Console.WriteLine("Current Employee's data:\n" + emp.ToString(' '));
                         break;
                     case "5":
                         Console.WriteLine("Enter Birth City");
-                        emp.SetBirthCity(Console.ReadLine());
+                        emp.BirthCity = Console.ReadLine();
                         Console.WriteLine("Current Employee's data:\n" + emp.ToString(' '));
                         break;
                     default: break;
@@ -182,8 +183,8 @@ namespace Structures
             int size = 0;
 
             if (File.Exists(filename))
-                size = getLastID(filename);
-            
+                size = File.ReadAllLines(filename).Length;
+
             Employee[] employees = new Employee[size];
             int index = 0;
 
@@ -198,7 +199,7 @@ namespace Structures
             }
             for(int i = 0; i < size; i++)
             {
-                if(employees[i].GetID() == emp.GetID())
+                if(employees[i].Id == emp.Id)
                 {
                     employees[i] = emp;
                     break;
@@ -220,9 +221,9 @@ namespace Structures
         /// <param name="to">конец диапазона</param>
         /// <param name="filename">путь к фалу и его имя</param>
         /// <returns></returns>
-        static Employee[] GetEmployeesDateRange(DateTime from, DateTime to, string filename)
+        static void ShowEmployeesDateRange(DateTime from, DateTime to, string filename)
         {
-            int size = GetSizeList(filename);
+            int size = File.ReadAllLines(filename).Length;
             Employee[] employees = new Employee[size];
             int count = 0;
 
@@ -233,18 +234,12 @@ namespace Structures
                 while((line = sr.ReadLine()) != null)
                 {
                     Employee emp = new Employee(line, '#');
-                    if (emp.GetDate() > from && emp.GetDate() < to)
+                    if (emp.Date >= from && emp.Date <= to)
                     {
-                        employees[count] = emp;
-                        count++;
+                        Console.WriteLine(emp.ToString(' '));
                     }
                 }
             }
-            Employee[] rangedEmployees = new Employee[count];
-            for (int i = 0; i < count; i++)
-                rangedEmployees[i] = employees[i];
-
-            return rangedEmployees;
         }
 
         /// <summary>
@@ -255,7 +250,7 @@ namespace Structures
         /// <returns></returns>
         static Employee[] GetSortedEmployees(bool upper, string filename)
         {
-            int size = GetSizeList(filename);
+            int size = File.ReadAllLines(filename).Length;
             Employee[] employees = new Employee[size];
 
             using (StreamReader sr = new StreamReader(filename))
@@ -268,39 +263,14 @@ namespace Structures
                     index++;
                 }
             }
+            DateTime[] dateTimes = new DateTime[size];
+            for(int i = 0; i < size; i++)
+                dateTimes[i] = employees[i].Date;
+            
+            Array.Sort(dateTimes, employees);
+            if(!upper)
+                Array.Reverse(employees);
 
-            Employee tmp;
-
-            if (upper)
-            {
-                for (int i = 0; i + 1 < size; i++)
-                {
-                    for (int j = 0; j + 1 < size - i; j++)
-                    {
-                        if (employees[j + 1].GetDate() < employees[j].GetDate())
-                        {
-                            tmp = employees[j + 1];
-                            employees[j + 1] = employees[j];
-                            employees[j] = tmp;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                for (int i = 0; i + 1 < size; i++)
-                {
-                    for (int j = 0; j + 1 < size - i; j++)
-                    {
-                        if (employees[j + 1].GetDate() > employees[j].GetDate())
-                        {
-                            tmp = employees[j + 1];
-                            employees[j + 1] = employees[j];
-                            employees[j] = tmp;
-                        }
-                    }
-                }
-            }
             return employees;
         }
 
@@ -354,8 +324,7 @@ namespace Structures
                         break;
 
                     case "3":
-                        string line = "0#" + DateTime.Now.ToString() + "#" + enterData();
-                        AddEmployeeToFile(new Employee(line, '#'), filename);
+                        AddLineToFile(enterData(), filename);
                         break;
 
                     case "4":
@@ -381,9 +350,7 @@ namespace Structures
                         Console.WriteLine("Enter Date to");
                         DateTime to = Convert.ToDateTime(Console.ReadLine());
 
-                        Employee[] emps = GetEmployeesDateRange(from, to, filename);
-                        for (int i = 0; i < emps.Length; i++)
-                            Console.WriteLine(emps[i].ToString(' '));
+                        ShowEmployeesDateRange(from, to, filename);
                         break;
 
                     case "7":
@@ -414,7 +381,7 @@ namespace Structures
             }
         }
 
-        static int GetSizeList(string filename)
+        /*static int GetSizeList(string filename)
         {
             int count = 0;
             string readLine;
@@ -425,7 +392,7 @@ namespace Structures
             }
             return count;
         }
-
+        */
         static void showFileData(string fileName)
         {
             StreamReader sr = new StreamReader(fileName);
@@ -457,43 +424,21 @@ namespace Structures
             return id;
         }
 
-        /*static void addLineToFile(string line, string fileName)
-        {
-            int id = 0;
-            string date = DateTime.Now.ToString("dd.MM.yyyy HH:mm");
-
-            FileInfo f = new FileInfo(fileName);
-            if (f.Exists)
-                id = getLastID(fileName);
-            id++;
-
-            string writeLine = id.ToString() + "#" + date + "#" + line;
-
-            using (StreamWriter sw = new StreamWriter(fileName, true))
-            {
-                sw.WriteLine(writeLine);
-            }
-        }
-        */
-
-        static string enterData()
+        static string[] enterData()
         {
             Console.WriteLine("enter Surname Name SecondName");
-            StringBuilder line = new StringBuilder(Console.ReadLine());
-            line.Append('#');
+            string[] parts = new string[7];
+            parts[2] = Console.ReadLine();
             Console.WriteLine("enter Age");
-            line.Append(Console.ReadLine());
-            line.Append('#');
+            parts[3] = Console.ReadLine();
             Console.WriteLine("enter Height");
-            line.Append(Console.ReadLine());
-            line.Append('#');
+            parts[4] = Console.ReadLine();
             Console.WriteLine("enter Birth Date");
-            line.Append(Console.ReadLine());
-            line.Append('#');
+            parts[5] = Console.ReadLine();
             Console.WriteLine("enter Birth Place");
-            line.Append(Console.ReadLine());
+            parts[6] = Console.ReadLine();
 
-            return line.ToString();
+            return parts;
         }
     }
 }

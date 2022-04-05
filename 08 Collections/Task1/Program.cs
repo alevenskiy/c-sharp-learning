@@ -25,15 +25,8 @@ namespace Task1
 
         static List<int> DeleteFromList(List<int> list)
         {
-            List<int> list2 = new List<int>();
-            foreach (int item in list)
-            {
-                if (item <= 25 || item >= 50)
-                {
-                    list2.Add(item);
-                }
-            }
-            return list2;
+            list.RemoveAll(x => (x > 25 && x < 50));
+            return list;
         }
 
         static void Main(string[] args)

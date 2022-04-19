@@ -19,7 +19,7 @@ namespace TelegramBot
     {
         static TelegramBotClient bot;
 
-        static string dowloadPath = "download";
+        static string downloadPath = "download";
 
         static string token = System.IO.File.ReadAllText(@"meowsic.token");
 
@@ -152,7 +152,7 @@ namespace TelegramBot
                                 await bot.SendTextMessageAsync(message.Chat, "https://purrli.com/");
                                 break;
                             case "котя":
-                                await bot.SendPhotoAsync(message.Chat, "http://thecatapi.com/api/images/get?format=src&type=jpg,png");
+                                await bot.SendPhotoAsync(message.Chat, "https://thiscatdoesnotexist.com/");
                                 break;
 
                             case "/showlist":
@@ -171,39 +171,30 @@ namespace TelegramBot
 
         private static async void DownloadFile(Update update)
         {
-            var file = await bot.GetFileAsync(update.Message.Photo[2].FileId);
-
-            //var client = new WebClient();
-            //using (Stream stream = client.OpenRead($"https://api.telegram.org/file/bot{token}/{file.FilePath}"))
-            //{
-            //    using (StreamReader reader = new StreamReader(stream))
-            //    {
-            //        string line = "";
-            //        while ((line = reader.ReadLine()) != null)
-            //        {
-            //            Console.WriteLine(reader.ReadToEnd());
-            //        }
-            //    }
-            //}
-
-            if (!Directory.Exists(dowloadPath))
+            if (update.Message.Photo != null)
             {
-                Directory.CreateDirectory(dowloadPath);
+                var photo = update.Message.Photo[2];
+                var username = update.Message.From.Username;
 
+                var file = await bot.GetFileAsync(photo.FileId);
+
+                if (!Directory.Exists(downloadPath + $"\\{username}"))
+                {
+                    Directory.CreateDirectory(downloadPath + $"\\{username}");
+
+                }
+                using (FileStream fs = new FileStream(downloadPath + $"\\{username}\\{photo.FileUniqueId}", FileMode.Create))
+                {
+                    await bot.DownloadFileAsync(file.FilePath, fs);
+                }
             }
-            FileStream fs = new FileStream(dowloadPath, FileMode.Create);//----------------разбей на части и проверь что из этого ошибка
-
-            await bot.DownloadFileAsync(file.FilePath, fs);
-            fs.Close();
-
-            fs.Dispose();
 
         }
 
         private static List<FileInfo> ShowFiles()
         {
-            Directory.CreateDirectory(dowloadPath);
-            return Directory.GetFiles(dowloadPath).Select(c => new FileInfo(c)).ToList();
+            Directory.CreateDirectory(downloadPath);
+            return Directory.GetFiles(downloadPath).Select(c => new FileInfo(c)).ToList();
         }
 
 

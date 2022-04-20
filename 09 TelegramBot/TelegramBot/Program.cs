@@ -21,7 +21,7 @@ namespace TelegramBot
 
         static string downloadPath = "download";
 
-        static string token = System.IO.File.ReadAllText(@"meowsic.token");
+        static string token = System.IO.File.ReadAllText("meowsic.token");
 
         static void Main(string[] args)
         {
@@ -67,7 +67,7 @@ namespace TelegramBot
                     }
                     if (userMessage == "мяу")
                     {
-                        string response = $"мяу, {userFirstName}\nПока что бот может только реагировать на \\start, на hi и на мяу";
+                        string response = $"мяу";
                         url = $"{startUrl}sendMessage?chat_id={userID}&text={response}";
                         Console.WriteLine(wc.DownloadString(url));
                     }
@@ -105,21 +105,21 @@ namespace TelegramBot
         {
             if (update.Type == UpdateType.Message)
             {
-                Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(update));
+                //Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(update));
                 switch (update.Message.Type)
                 {
                     case MessageType.Audio:
                     case MessageType.Document:
                     case MessageType.Video:
                     case MessageType.Photo:
-                        DownloadFile(update);
+                        DownloadFile(bot, update);
                         break;
                     case MessageType.Text:
                         var message = update.Message;
                         switch (message.Text.ToLower())
                         {
                             case "/start":
-                                await bot.SendTextMessageAsync(message.Chat, $"Привет, {update.Message.From.Username}" +
+                                await bot.SendTextMessageAsync(message.Chat, $"Привет, {update.Message.From.FirstName}" +
                                 $"\nТекущий набор команд можно посмотреть по каманде /help");
                                 break;
 
@@ -152,14 +152,16 @@ namespace TelegramBot
                                 await bot.SendTextMessageAsync(message.Chat, "https://purrli.com/");
                                 break;
                             case "котя":
-                                await bot.SendPhotoAsync(message.Chat, "https://thiscatdoesnotexist.com/");
+                                await bot.SendPhotoAsync(message.Chat, "https://thiscatdoesnotexist.com/"); //сайт возвращает только одну картинку
                                 break;
 
                             case "/showlist":
-                                foreach (var fileInfo in ShowFiles())
+                                await bot.SendTextMessageAsync(message.Chat, "Okay, wait for it");
+                                foreach (var fileInfo in ShowFiles(update))
                                 {
-                                    await bot.SendTextMessageAsync(message.Chat, fileInfo.FullName);
+                                    await bot.SendDocumentAsync(message.Chat, new InputMedia(fileInfo.OpenRead(), fileInfo.Name));
                                 }
+                                await bot.SendTextMessageAsync(message.Chat, "Done");
                                 break;
                         }
                         
@@ -169,32 +171,98 @@ namespace TelegramBot
             }
         }
 
-        private static async void DownloadFile(Update update)
+        private static async void DownloadFile(ITelegramBotClient bot, Update update)
         {
+
             if (update.Message.Photo != null)
             {
-                var photo = update.Message.Photo[2];
+                var photo = update.Message.Photo[update.Message.Photo.Length - 1];
                 var username = update.Message.From.Username;
+
+                Console.WriteLine($"\n{username} {photo.FileUniqueId} photo {photo.FileSize}");
+
+                if (photo.FileSize >= 20971520)
+                {
+                    await bot.SendTextMessageAsync(update.Message.Chat, $"Photo is too big. Max size - 20MB") ;
+                    return;
+                }
 
                 var file = await bot.GetFileAsync(photo.FileId);
 
                 if (!Directory.Exists(downloadPath + $"\\{username}"))
                 {
                     Directory.CreateDirectory(downloadPath + $"\\{username}");
-
                 }
-                using (FileStream fs = new FileStream(downloadPath + $"\\{username}\\{photo.FileUniqueId}", FileMode.Create))
+                string fullPath = downloadPath + $"\\{username}\\{photo.FileUniqueId}.png";
+                using (FileStream fs = new FileStream(fullPath, FileMode.Create))
                 {
                     await bot.DownloadFileAsync(file.FilePath, fs);
                 }
             }
 
+            if (update.Message.Audio != null)
+            {
+                var audio = update.Message.Audio;
+                var username = update.Message.From.Username;
+
+                Console.WriteLine($"\n{username} {audio.FileUniqueId} {audio.MimeType} {audio.FileSize}");
+
+                if(audio.FileSize >= 20971520)
+                {
+                    await bot.SendTextMessageAsync(update.Message.Chat, $"{audio.FileName} too big. Max size - 20MB") ;
+                    return;
+                }
+
+                var file = await bot.GetFileAsync(audio.FileId);
+
+                if (!Directory.Exists(downloadPath + $"\\{username}"))
+                {
+                    Directory.CreateDirectory(downloadPath + $"\\{username}");
+                }
+                string fullPath = downloadPath + $"\\{username}\\{audio.FileName}";
+                using (FileStream fs = new FileStream(fullPath, FileMode.Create))
+                {
+                    await bot.DownloadFileAsync(file.FilePath, fs);
+                }
+            }
+
+            if (update.Message.Document != null)
+            {
+                var doc = update.Message.Document;
+                var username = update.Message.From.Username;
+
+                Console.WriteLine($"\n{username} {doc.FileUniqueId} {doc.MimeType} {doc.FileSize}");
+
+                if (doc.FileSize >= 20971520)
+                {
+                    await bot.SendTextMessageAsync(update.Message.Chat, $"File {doc.FileName} is too big. Max size - 20MB");
+                    return;
+                }
+
+                var file = await bot.GetFileAsync(doc.FileId);
+
+                if (!Directory.Exists(downloadPath + $"\\{username}"))
+                {
+                    Directory.CreateDirectory(downloadPath + $"\\{username}");
+                }
+                string fullPath = downloadPath + $"\\{username}\\{doc.FileName}";
+                using (FileStream fs = new FileStream(fullPath, FileMode.Create))
+                {
+                    await bot.DownloadFileAsync(file.FilePath, fs);
+                }
+            }
+
+            await bot.SendTextMessageAsync(update.Message.Chat, "downloaded");
         }
 
-        private static List<FileInfo> ShowFiles()
+        private static List<FileInfo> ShowFiles(Update update)
         {
-            Directory.CreateDirectory(downloadPath);
-            return Directory.GetFiles(downloadPath).Select(c => new FileInfo(c)).ToList();
+            var username = update.Message.From.Username;
+            if (!Directory.Exists(downloadPath + $"\\{username}"))
+            {
+                Directory.CreateDirectory(downloadPath + $"\\{username}");
+            }
+            return Directory.GetFiles(downloadPath + $"\\{username}").Select(c => new FileInfo(c)).ToList();
         }
 
 

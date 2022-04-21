@@ -12,6 +12,7 @@ using Telegram.Bot.Args;
 using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace TelegramBot
 {
@@ -95,7 +96,7 @@ namespace TelegramBot
             };
 
             bot.StartReceiving(HandleUpdateAsync, ErrorHandler, receiverOptions);
-
+            bot.AnswerCallbackQueryAsync("");
             Console.ReadLine();
 
             #endregion
@@ -103,9 +104,33 @@ namespace TelegramBot
 
         private static async Task HandleUpdateAsync(ITelegramBotClient bot, Update update, CancellationToken cancellationToken)
         {
+            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(update));
+            //надо разобраться посылается ли callbackData, куда посылается, как ловить
+
+            if (update.Type == UpdateType.CallbackQuery)
+            {
+                var files = ShowFiles(update);
+                foreach (var fileInfo in files)
+                {
+                    if (fileInfo.Name == update.CallbackQuery.Data)
+                    {
+                        await bot.AnswerCallbackQueryAsync(callbackQueryId: fileInfo.Name);
+                        await bot.SendDocumentAsync(update.Message.Chat, new InputMedia(fileInfo.OpenRead(), fileInfo.Name));
+                    }
+                }
+
+            }
+            if (update.CallbackQuery != null)
+            {
+                await bot.AnswerCallbackQueryAsync(callbackQueryId: update.CallbackQuery.Data, text: $"{update.CallbackQuery.Data}");
+                Console.WriteLine(update.CallbackQuery.Data);
+            }
+
+
+
             if (update.Type == UpdateType.Message)
             {
-                //Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(update));
+                
                 switch (update.Message.Type)
                 {
                     case MessageType.Audio:
@@ -156,19 +181,69 @@ namespace TelegramBot
                                 break;
 
                             case "/showlist":
-                                await bot.SendTextMessageAsync(message.Chat, "Okay, wait for it");
-                                foreach (var fileInfo in ShowFiles(update))
-                                {
-                                    await bot.SendDocumentAsync(message.Chat, new InputMedia(fileInfo.OpenRead(), fileInfo.Name));
-                                }
-                                await bot.SendTextMessageAsync(message.Chat, "Done");
+                                SendList(bot, update);
+                                break;
+                            case "/inline":
+                                await bot.SendTextMessageAsync(message.Chat, "idk how to catch callbackData");
+                                SendInline(update, cancellationToken);
                                 break;
                         }
-                        
+
+                        if(message.Text.ToLower()[0] == '/' && message.Text.ToLower()[1] == '_')
+                        {
+                            string requestedFile = message.Text.ToLower().Substring(2);
+                            var files = ShowFiles(update);
+                            foreach (var fileInfo in files)
+                            {
+                                if (requestedFile == fileInfo.CreationTime.ToString("dd_MM_yyyy_HH_mm_ss"))
+                                {
+                                    await bot.SendDocumentAsync(update.Message.Chat, new InputMedia(fileInfo.OpenRead(), fileInfo.Name));
+                                }
+                            }
+                        }
+
                         break;
                 }
-                
+
             }
+
+            
+        }
+
+        public static async void SendList(ITelegramBotClient bot, Update update)
+        {
+            StringBuilder fulltext = new StringBuilder("Your full file list\n\n");
+
+            var files = ShowFiles(update);
+            foreach (var fileInfo in files)
+            {
+                fulltext.Append(
+                    $"{fileInfo.Name}\n" +
+                    $"{fileInfo.Length} bytes\n" +
+                    $"Uploaded time: {fileInfo.CreationTime}\n" +
+                    "Download: /_" +
+                    $"{fileInfo.CreationTime.ToString("dd_MM_yyyy_HH_mm_ss")} \n\n");
+            }
+
+            await bot.SendTextMessageAsync(update.Message.Chat, fulltext.ToString());
+        }
+
+        public static async void SendInline(Update update, CancellationToken cancellationToken)
+        {
+            List<InlineKeyboardButton[]> buttons = new List<InlineKeyboardButton[]>();
+            var files = ShowFiles(update);
+            foreach (var fileInfo in files)
+            {
+                buttons.Add(new[] { 
+                    InlineKeyboardButton.WithCallbackData(text: $"{fileInfo.Name}",callbackData: $"{fileInfo.Name}")
+                });
+            }
+
+            await bot.SendTextMessageAsync(
+                chatId: update.Message.Chat,
+                text: "Choose",
+                replyMarkup: new InlineKeyboardMarkup(buttons.ToArray()),
+                cancellationToken: cancellationToken);
         }
 
         private static async void DownloadFile(ITelegramBotClient bot, Update update)
@@ -264,8 +339,6 @@ namespace TelegramBot
             }
             return Directory.GetFiles(downloadPath + $"\\{username}").Select(c => new FileInfo(c)).ToList();
         }
-
-
 
         private static Task ErrorHandler(ITelegramBotClient arg1, Exception arg2, CancellationToken arg3)
         {

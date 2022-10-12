@@ -171,13 +171,9 @@ namespace TelegramBot
                                 }
                             }
                         }
-
                         break;
                 }
-
             }
-
-            
         }
 
         public static async void SendList(ITelegramBotClient bot, Update update)

@@ -10,9 +10,20 @@ namespace Task1
     {
         static void Main(string[] args)
         {
-            Clients clients = new Clients();
-
-            Console.ReadKey();
+            while (true)
+            {
+                Consultant consultant = new Consultant();
+                Console.WriteLine();
+                Console.WriteLine("press 1 to show Client Info");
+                Console.WriteLine("press 2 to change the Phone Number");
+                Console.WriteLine("press 0 to exit");
+                switch (Console.ReadLine())
+                {
+                    case "1": Console.WriteLine(); consultant.ShowClient(); break;
+                    case "2": Console.WriteLine(); consultant.PhoneNumberChange(); break;
+                    case "0": return;
+                }
+            }
         }
     }
 }
